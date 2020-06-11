@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+             body {
+                background-color: black;
+            }
+
+            #app {
+                height: 400px;
+                width: 90%;
+                margin: auto;
+                position: relative;
+                background-image: linear-gradient(midnightblue, darkgrey);
+            }
+
+            #names {
+                position: absolute;
+                text-align: center;
+            }
+
+            .name {
+                display: inline;
+                color: black;
+                padding: 1px;
+            }
+
+            #fists, #shouts {
+                width: 90%;
+                margin: auto;
+            }
+
+            .fist {
+                width: auto;
+                position:absolute;
+            }
+
+            .shout {
+                position: absolute;
+                background-color: lightgray;
+                border-radius: 10px;
+                border: 2px solid black;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div id="names"></div>
+            <div id="shouts"></div>
+            <div id="fists"></div>
+        </div>
+    </body>
+    <script>
+        names = [
+            'Keith Childress', 'Bettie Jones', 'Kevin Matthews',
+            'Michael Noel', 'Leroy Browning', 'Roy Nelson', 'Migual Espinal',
+            'Nathaniel Pickett', 'Tiara Thomas', 'Cornelius Brown',
+            'Jamar Clark', 'Richard Perkins', 'Michael Lee Marshall',
+            'Alonzo Smith', 'Anthony Ashford', 'Dominic Hutchinson', 'Dontre Hamilton',
+            'Eric Garner', 'John Crawford III', 'Michael Brown Jr', 'Ezel Ford',
+            'Dante Parker', 'Tanisha Anderson','Akai Gurley','Tamir Rice',
+            'Rumain Brisbon', 'Jerame Reid', 'Tony Robinson', 'Phillip White',
+            'Eric Harris', 'Walter Scott', 'Freddie Gray', 'Stephon Clark',
+            'Terrence Crutcher', 'Philando Castile', 'Alton Sterling',
+            'Laquan McDonald', 'George Floyd', 'Trayvon Martin', 'Ahmaud Arbery',
+            'Tony McDade', 'Yassin Mohamed', 'Finan Berhe', 'Sean Reed', 'Steven Taylor',
+            'Ariane McCree', 'Terrance Franklin', 'Miles Hall', 'Darius Tarver',
+            'William Green', 'Samuel Mallard', 'KK Jones', 'De\'von Bailey',
+            'Christopher Whitfield', 'Anthony Hill', 'Eric Logan', 'Jamarion Robinson',
+            'Gregory Hill Jr', 'JaQuavion Slaton', 'Ryan Twyman', 'Brandon Webber',
+            'Jimmy Atchison','Sean Reed', 'Wendell Allen', 'Kendrec McDade',
+            'Jonathan Ferrell', 'Jordan Baker', 'Larry Jackson Jr', 'Manuel Loggins Jr',
+            'Ramarley Graham', 'Anthony Smith', 'Robert White', 'Botham Jean', 'DeAndre Ballard',
+            'Jemel Roberson', 'D\'ettrick Griffin', 'Willie McCoy', 'Jimmy Atchison',
+            'Emmitt Till'
+
+        ];
+
+        shouts = [
+            'BLACK LIVES MATTER', 'I CAN\'T BREATH',
+            'WE NEED JUSTICE', 'SAY THEIR NAMES',
+            'SILENCE IS VIOLENCE'
+        ];
+
+        var numFists = 20;
+
+    window.onload = function() {
+        shuffle(names);
+
+        //create names
+        for (var i = 0; i < names.length; i++) {
+            const name = document.createElement('DIV');
+            name.setAttribute("class","name");
+            name.style.fontSize = (Math.random() * 20 + 10).toString() + "px";
+            name.innerHTML = names[i];
+
+            document.getElementById("names").appendChild(name);
+        }
+
+        //create fists
+        for (var i=0; i < numFists; i++) {
+            const fistImg = document.createElement('IMG');
+            fistImg.setAttribute("src", "https://upload.wikimedia.org/wikipedia/commons/2/2a/Fist.svg");
+            fistImg.setAttribute("class", "fist");
+            fistImg.setAttribute("id", "fist" + i.toString());
+            fistImg.style.height = (Math.random() * 100 + 50).toString() + "px";
+            fistImg.style.left = "calc(" + (100*i/numFists).toString() + "% + " + (Math.random()*20).toString() + "px)";
+
+            document.getElementById("fists").appendChild(fistImg);
+            animateFist(i);
+        }  
+
+        //create shouts
+        for (var i=0; i<shouts.length; i++) {
+            const shout = document.createElement("DIV");
+            shout.setAttribute("class", "shout");
+            shout.setAttribute("id", "shout" + i.toString());
+            shout.innerHTML = shouts[i];
+
+            document.getElementById("shouts").appendChild(shout);
+            animateShout(i);
+        }      
+
+    }
+
+    //animate fists sinusoidally
+    function animateFist(i) {
+        var count = Math.random()*60;
+        const fist = document.getElementById("fist" + i);
+
+        var id = setInterval(frame, 10);
+        function frame() {
+            fist.style.top = (Math.sin(count/30)*10 + 290).toString() + "px";
+            count++;
+        }
+    }
+
+    //animate shouts rising and fading
+    function animateShout(i) {
+        var count = 1;
+        var floatToHeight = 250;
+        var interval = 1;
+
+        var ypos = 250;
+        var opacity = 1;
+
+        const shout = document.getElementById("shout" + i);
+
+        var id = setInterval(frame, 10);
+        function frame() {
+            //reset shout after random interval
+            if (count % interval == 0) {
+                count = 1;
+                floatToHeight = Math.floor(Math.random()*100);
+                interval = Math.floor(Math.random()*300) + 100;
+
+                shout.style.fontSize = (Math.random()*30 + 10).toString() + "px";
+                shout.style.left = (Math.random()*90).toString() + "%";
+
+                ypos = 250;
+                opacity = 1;
+            //proportionately raise and fade the shout
+            } else {
+                ypos = ypos + 2*(floatToHeight - ypos)/interval;
+                shout.style.top = ypos.toString() + "px";
+
+                opacity = (ypos-floatToHeight)/(250-floatToHeight);
+                shout.style.opacity = opacity;
+            }
+
+            count++;
+        }
+    }
+
+    //array shuffling function
+    function shuffle(array) {
+    var ctr = array.length, temp, index;
+
+    while (ctr > 0) {
+        index = Math.floor(Math.random() * ctr);
+        ctr--;
+        temp = array[ctr];
+        array[ctr] = array[index];
+        array[index] = temp;
+    }
+    return array;
+}
+
+    </script>
+</html>

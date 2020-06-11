@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body {
+                background-color: black;
+            }
+
+            #app {
+                height: 300px;
+                width: 90%;
+                margin: auto;
+                animation: gradientSky 1.5s infinite alternate;
+            }
+
+            @keyframes gradientSky {
+                from{background-color: lightskyblue;}
+                to{background-color: skyblue;}
+            }
+
+            .flag {
+                position: relative;
+                height: 30px;
+                width: 60px;
+                margin: auto;
+            }
+
+            .pole {
+                background-color: brown;
+                position: absolute;
+                top: 0px;
+                left: -3px;
+                width: 3px;
+            }
+
+            .flagPart {
+                position: absolute;
+                height: 5px;
+                width: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='app'>
+        </div>
+    </body>
+    <script>
+        //flag class
+        class Flag {
+            constructor(name, xpos, ypos, poleheight, color1,color2,color3,color4,color5,color6) {
+                this.name = name;
+
+                //create flag div
+                const wholeFlag = document.createElement("DIV");
+                wholeFlag.setAttribute("class", "flag");
+
+                wholeFlag.style.top = ypos + "px";
+                wholeFlag.style.left = xpos + "px";
+
+                //create the pole
+                const pole = document.createElement("DIV");
+                pole.setAttribute("class","pole");
+                pole.style.height = poleheight + "px";
+
+                wholeFlag.appendChild(pole);
+
+                //create the animated flag div
+                const flag = document.createElement("DIV");
+                flag.setAttribute("id", name);
+
+                //create the individual parts
+                for(var i = 0; i < 72; i++) {
+                    let part = document.createElement("DIV");
+                    part.setAttribute("class", "flagPart");
+
+                    //color accordingly
+                    if (i < 12) {
+                        part.style.backgroundColor =  color1;
+                    } else if (i < 24){
+                        part.style.backgroundColor =  color2;
+                    } else if (i < 36) {
+                        part.style.backgroundColor =  color3;
+                    } else if (i < 48) {
+                        part.style.backgroundColor =  color4;                      
+                    } else if (i < 60) {
+                        part.style.backgroundColor =  color5;                       
+                    } else {
+                        part.style.backgroundColor =  color6;                      
+                    } 
+
+                    flag.appendChild(part);
+                }
+
+                //append divs
+                wholeFlag.appendChild(flag);
+                document.getElementById("app").appendChild(wholeFlag);
+      
+            }
+
+            animate() {
+                var count = Math.random()*34;
+                console.log(count);
+                var id = setInterval(frame, 10);
+                const name = this.name;
+
+                function frame() {
+                    var flagPart = document.getElementById(name).children;
+                    for(var i = 0; i<72; i++) {
+                        //stagger flag parts horizontally sinusoidally 
+                        flagPart[i].style.top = (5*Math.sin(count/17 + (i % 12)/5) + 5*Math.floor(i/12)).toString() + "px";
+                        flagPart[i].style.left = (5*(i % 12)).toString() + "px";
+                    }
+
+                    count++;
+                }
+            }
+        }
+
+        window.onload = function() {
+            //create all the flags
+            const trans = new Flag("trans","50","50","250","lightblue","pink","white","white","pink","lightblue");
+            trans.animate();
+
+            const bi = new Flag("bi","-40","40","230","magenta","magenta","purple","purple","darkblue","darkblue");
+            bi.animate();
+
+            const pan = new Flag("pan","25","40","200","magenta","magenta","yellow","yellow","turquoise","turquoise");
+            pan.animate();
+
+            const ace = new Flag("ace","-20","35","175","black","black","grey","white","purple","purple");
+            ace.animate();
+
+            const nb = new Flag("nb","40","30","150","yellow","yellow","white","purple","black","black");
+            nb.animate();
+
+            const lesbian = new Flag("lesbian","-30","30","120","red","sandybrown","white","white","pink","magenta");
+            lesbian.animate();
+
+            const queer = new Flag("queer","10","40","80","red","orange","yellow","green","blue","purple");
+            queer.animate();
+        }
+    </script>
+</html>
